@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Kayıt Ol</title>
+</head>
+<body>
+    <h1>Kayıt Ol</h1>
+    <form method="POST" action="{{ url_for('register') }}">
+        <label for="name">Ad:</label>
+        <input type="text" name="name" required><br>
+        <label for="surname">Soyad:</label>
+        <input type="text" name="surname" required><br>
+        <input type="submit" value="Kayıt Ol ve Sınava Başla">
+    </form>
+    <a href="{{ url_for('index') }}">Geri</a>
+</body>
+</html>
