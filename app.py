@@ -1,10 +1,9 @@
 # app.py
 from flask import Flask, render_template, request, redirect, url_for, session
 import sqlite3
-import random
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key'  # Bu key'i güvenli bir şekilde saklayın.
+app.secret_key = 'your_secret_key' # TODO
 
 def create_database():
     conn = sqlite3.connect('database/exam.db')
@@ -74,6 +73,12 @@ def questions():
             'q8': request.form['q8'],
         }
 
+        # Her sorunun cevabını kontrol et
+        for i in range(1, 9):
+            question = f'q{i}'
+            if question not in answers or answers[question] == '':
+                return "Tüm soruları cevaplandırmalısınız!"
+
         conn = sqlite3.connect('database/exam.db')
         cursor = conn.cursor()
         cursor.execute('INSERT INTO answers (user_id, q1, q2, q3, q4, q5, q6, q7, q8) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
@@ -106,6 +111,9 @@ def results():
         'q7': 'b',
         'q8': 'a',
     }
+
+    if not results:
+        return render_template('no_users_found.html')
 
     scores = []
     for result in results:

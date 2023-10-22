@@ -34,14 +34,25 @@ def seed_data():
     conn = sqlite3.connect('database/exam.db')
     cursor = conn.cursor()
 
+    cursor.execute('DELETE FROM users')
+    cursor.execute('DELETE FROM answers')
+
     # Rastgele kullanıcılar oluştur
     names = ['Ahmet', 'Ayşe', 'Mehmet', 'Elif', 'Mustafa', 'Zeynep', 'Emir', 'Leyla']
     surnames = ['Yılmaz', 'Demir', 'Kaya', 'Arslan', 'Aydın', 'Güneş', 'Kurt', 'Koç']
 
+    added_users = set()  # Eklenen kullanıcıları izlemek için bir küme
+
     for _ in range(30):
-        name = random.choice(names)
-        surname = random.choice(surnames)
-        cursor.execute('INSERT INTO users (name, surname) VALUES (?, ?)', (name, surname))
+        while True:
+            name = random.choice(names)
+            surname = random.choice(surnames)
+            user = (name, surname)
+            if user not in added_users:
+                added_users.add(user)
+                break
+
+        cursor.execute('INSERT INTO users (name, surname) VALUES (?, ?)', user)
 
     # Rasgele puanlar ekle (1 ila 8 arası)
     for user_id in range(1, 31):
